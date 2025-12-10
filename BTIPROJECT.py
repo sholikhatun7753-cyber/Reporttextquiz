@@ -16,23 +16,22 @@ questions = [
     }
 ]
 
-# ====== STATE SLIDE ======
+# ====== SESSION STATE SLIDE ======
 if "slide" not in st.session_state:
     st.session_state.slide = 0
 
-# ====== CONTENT SLIDE ======
-q = questions[st.session_state.slide]   # soal berdasarkan index slide
+# ====== TAMPILKAN SOAL ======
+q = questions[st.session_state.slide]
 
-st.title("🍽️ Morning Quiz – Style Quizizz")
+st.title("🍽️ Morning Quiz – Quizizz Style")
 st.subheader(f"Soal {st.session_state.slide + 1}")
+st.write(q["title"])
 
-st.markdown(f"### {q['title']}")
+# Radio input
+st.radio("Pilih jawaban:", q["options"], key=q["key"])
 
-# pilihan jawaban
-answer = st.radio("Pilih jawaban:", q["options"], key=q["key"])
-
-# ====== Navigation Buttons ======
-col1, col2, col3 = st.columns([1, 1, 1])
+# ====== NAVIGASI ======
+col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.session_state.slide > 0:
@@ -44,21 +43,25 @@ with col3:
         if st.button("Next ➡️"):
             st.session_state.slide += 1
 
-# ====== LAST SLIDE RESULT ======
+# ====== SLIDE TERAKHIR (HASIL) ======
 if st.session_state.slide == len(questions) - 1:
-    st.markdown("---")
-    st.subheader("🎉 Hasil & Feedback")
+    st.write("---")
+    st.subheader("🎉 Hasil Kamu:")
 
     sarapan = st.session_state.get("sarapan", None)
     mood = st.session_state.get("mood", None)
 
     if sarapan:
-        st.write(f"🍽️ **Sarapanmu:** {sarapan}")
+        st.write("🍽️ Sarapanmu:", sarapan)
 
-    # Feedback mood
+    # Evaluasi mood
     if mood == "Sleepy":
-        st.warning("😴 Ngantuk! Kamu lupa sarapan bergizi.")
+        st.warning("😴 Kamu ngantuk, mungkin kurang sarapan.")
     elif mood == "Hungry":
-        st.error("🍽️ Belajar tidak nyaman karena tidak sarapan sehat.")
+        st.error("🍔 Kamu lapar! Seharusnya sarapan dulu.")
     elif mood == "Focus":
-        st.success("🎉
+        st.success("🎉 Kamu fokus! Bagus sekali!")
+    else:
+        st.info("Mood tidak terbaca.")
+
+    st.write("Terima kasih sudah ikut quiz hari ini!")
