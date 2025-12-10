@@ -1,59 +1,64 @@
 import streamlit as st
 
-# --- Slideshow sederhana ---
-st.title("🍽️ Descriptive Text: The Golden Plate of Morning Energy")
+st.set_page_config(page_title="Quiz Sarapan", layout="centered")
 
-slides = [
-    "### Slide 1\n🍳 **Selamat datang di Menu Sarapan Pagi!**\nNikmati energi pagi dengan pilihan makanan bergizi.",
-    "### Slide 2\n🍱 **Menu untuk Sarapan:**\n- Fried Rice\n- Fried Chicken\n- Fries",
-    "### Slide 3\n💬 **Bagikan perasaan pagimu!**\nApakah kamu merasa sleepy, hungry, atau focus?"
+# ====== DATA QUIZ ======
+questions = [
+    {
+        "title": "Pilih menu sarapanmu!",
+        "options": ["Fried Rice", "Fried Chicken", "Fries"],
+        "key": "sarapan"
+    },
+    {
+        "title": "Bagaimana perasaanmu pagi ini?",
+        "options": ["Sleepy", "Hungry", "Focus"],
+        "key": "mood"
+    }
 ]
 
-# Session state untuk index slide
-if "slide_index" not in st.session_state:
-    st.session_state.slide_index = 0
+# ====== STATE SLIDE ======
+if "slide" not in st.session_state:
+    st.session_state.slide = 0
 
-# Tampilkan slide sekarang
-st.markdown(slides[st.session_state.slide_index])
+# ====== CONTENT SLIDE ======
+q = questions[st.session_state.slide]   # soal berdasarkan index slide
 
-# Tombol navigasi
-col1, col2 = st.columns(2)
+st.title("🍽️ Morning Quiz – Style Quizizz")
+st.subheader(f"Soal {st.session_state.slide + 1}")
+
+st.markdown(f"### {q['title']}")
+
+# pilihan jawaban
+answer = st.radio("Pilih jawaban:", q["options"], key=q["key"])
+
+# ====== Navigation Buttons ======
+col1, col2, col3 = st.columns([1, 1, 1])
+
 with col1:
-    if st.button("⬅️ Prev") and st.session_state.slide_index > 0:
-        st.session_state.slide_index -= 1
-with col2:
-    if st.button("Next ➡️") and st.session_state.slide_index < len(slides) - 1:
-        st.session_state.slide_index += 1
+    if st.session_state.slide > 0:
+        if st.button("⬅️ Prev"):
+            st.session_state.slide -= 1
 
+with col3:
+    if st.session_state.slide < len(questions) - 1:
+        if st.button("Next ➡️"):
+            st.session_state.slide += 1
 
-st.markdown("---")
+# ====== LAST SLIDE RESULT ======
+if st.session_state.slide == len(questions) - 1:
+    st.markdown("---")
+    st.subheader("🎉 Hasil & Feedback")
 
-# --- Form Input Sarapan ---
-st.subheader("🍽️ Pilih Menu Sarapan")
+    sarapan = st.session_state.get("sarapan", None)
+    mood = st.session_state.get("mood", None)
 
-menu_sarapan = st.selectbox(
-    "Masukkan menu sarapanmu:",
-    ["fried rice", "fried chicken", "fries"]
-)
+    if sarapan:
+        st.write(f"🍽️ **Sarapanmu:** {sarapan}")
 
-st.write(f"**Sarapanmu adalah:** {menu_sarapan}")
-
-# --- Form Mood ---
-st.subheader("💭 Bagaimana perasaanmu pagi ini?")
-
-mood = st.selectbox(
-    "Masukkan mood pagi kamu:",
-    ["sleepy", "hungry", "focus"]
-)
-
-# Logika mood
-if mood == "sleepy":
-    st.warning("😴 Ngantuk! Kamu lupa sarapan bergizi.")
-elif mood == "hungry":
-    st.error("🍽️ Belajar tidak nyaman karena tidak sarapan sehat.")
-elif mood == "focus":
-    st.success("🎉 Selamat! Kamu bisa belajar dengan baik!")
-else:
-    st.info("Mood tidak dikenali, jangan lupa sarapan ya!")
-
-st.markdown("### Terimakasih sudah berbagi perasaanmu pagi ini!")
+    # Feedback mood
+    if mood == "Sleepy":
+        st.warning("😴 Ngantuk! Kamu lupa sarapan bergizi.")
+    elif mood == "Hungry":
+        st.error("🍽️ Belajar tidak nyaman karena tidak sarapan sehat.")
+    elif mood == "Focus":
+        st.success("🎉
