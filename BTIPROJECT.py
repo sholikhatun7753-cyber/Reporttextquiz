@@ -16,37 +16,26 @@ questions = [
     }
 ]
 
-# ====== SESSION STATE SLIDE ======
+total_slides = len(questions) + 1  # +1 untuk slide hasil
+
+# ====== STATE SLIDE ======
 if "slide" not in st.session_state:
     st.session_state.slide = 0
 
 # ====== TAMPILKAN SOAL ======
-q = questions[st.session_state.slide]
+if st.session_state.slide < len(questions):
 
-st.title("🍽️ Morning Quiz – Quizizz Style")
-st.subheader(f"Soal {st.session_state.slide + 1}")
-st.write(q["title"])
+    q = questions[st.session_state.slide]
 
-# Radio input
-st.radio("Pilih jawaban:", q["options"], key=q["key"])
+    st.title("🍽️ Morning Quiz – Quizizz Style")
+    st.subheader(f"Soal {st.session_state.slide + 1}")
+    st.write(q["title"])
 
-# ====== NAVIGASI ======
-col1, col2, col3 = st.columns(3)
+    st.radio("Pilih jawaban:", q["options"], key=q["key"])
 
-with col1:
-    if st.session_state.slide > 0:
-        if st.button("⬅️ Prev"):
-            st.session_state.slide -= 1
-
-with col3:
-    if st.session_state.slide < len(questions) - 1:
-        if st.button("Next ➡️"):
-            st.session_state.slide += 1
-
-# ====== SLIDE TERAKHIR (HASIL) ======
-if st.session_state.slide == len(questions) - 1:
-    st.write("---")
-    st.subheader("🎉 Hasil Kamu:")
+else:
+    # ====== SLIDE HASIL ======
+    st.title("🎉 Hasil Kamu")
 
     sarapan = st.session_state.get("sarapan", None)
     mood = st.session_state.get("mood", None)
@@ -54,14 +43,28 @@ if st.session_state.slide == len(questions) - 1:
     if sarapan:
         st.write("🍽️ Sarapanmu:", sarapan)
 
-    # Evaluasi mood
     if mood == "Sleepy":
         st.warning("😴 Kamu ngantuk, mungkin kurang sarapan.")
     elif mood == "Hungry":
         st.error("🍔 Kamu lapar! Seharusnya sarapan dulu.")
     elif mood == "Focus":
-        st.success("🎉 Kamu fokus! Bagus sekali!")
+        st.success("✨ Kamu fokus! Bagus sekali!")
     else:
         st.info("Mood tidak terbaca.")
 
-    st.write("Terima kasih sudah ikut quiz hari ini!")
+    st.write("Terima kasih sudah mengikuti quiz! 🌞")
+
+# ====== NAVIGASI ======
+col1, col2, col3 = st.columns(3)
+
+# Tombol Prev
+with col1:
+    if st.session_state.slide > 0:
+        if st.button("⬅️ Prev"):
+            st.session_state.slide -= 1
+
+# Tombol Next
+with col3:
+    if st.session_state.slide < total_slides - 1:
+        if st.button("Next ➡️"):
+            st.session_state.slide += 1
