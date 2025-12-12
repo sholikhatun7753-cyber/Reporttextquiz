@@ -5,12 +5,12 @@ st.set_page_config(page_title="Quiz Sarapan", layout="centered")
 # ====== DATA QUIZ ======
 questions = [
     {
-        "title": "Pilih menu sarapanmu!",
+        "title": "Choose your breakfast menu!",
         "options": ["Fried Rice", "Fried Chicken", "Fries"],
         "key": "sarapan"
     },
     {
-        "title": "Bagaimana perasaanmu pagi ini?",
+        "title": "How do you fell now?",
         "options": ["Sleepy", "Hungry", "Focus"],
         "key": "mood"
     }
@@ -44,9 +44,9 @@ else:
         st.write("🍽️ Sarapanmu:", sarapan)
 
     if mood == "Sleepy":
-        st.warning("😴 Kamu ngantuk, mungkin kurang sarapan.")
+        st.warning("😴 Kamu ngantuk, mungkin kurang sarapan sehat.")
     elif mood == "Hungry":
-        st.error("🍔 Kamu lapar! Seharusnya sarapan dulu.")
+        st.error("🍔 Kamu lapar! Seharusnya sarapan menu sehat dulu.")
     elif mood == "Focus":
         st.success("✨ Kamu fokus! Bagus sekali!")
     else:
@@ -68,3 +68,4 @@ with col3:
     if st.session_state.slide < total_slides - 1:
         if st.button("Next ➡️"):
             st.session_state.slide += 1
+
